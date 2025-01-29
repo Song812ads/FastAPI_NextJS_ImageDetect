@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sqlmodel
+psycopg2-binary
+python-multipart
+ultralytics==8.3.11
+# pycuda==2022.2.2
+# tensorrt==8.5.3.1
