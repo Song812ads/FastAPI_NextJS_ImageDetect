@@ -38,6 +38,6 @@ Now in database:
 
 ![alt text](img/image-2.png)
 
-get the path in database to Window + R:
+Enter the path in database to Window + R:
 
 ![alt text](img/image-3.png)
