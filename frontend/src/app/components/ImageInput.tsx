@@ -1,60 +1,78 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from "next/navigation";
 
 interface ImageUploadProps {
   message: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ message }) => {
+  const router = useRouter();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [time, setTime] = useState<string | null>(null);
 
   // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const file = event.target.files?.[0]; 
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      event.preventDefault();
+      const file = event.target.files?.[0]; 
 
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file.');
-        setImagePreview(null);
-        return; 
-      }
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setImagePreview(e.target.result as string);
+      if (file) {
+        if (!file.type.startsWith('image/')) {
+          alert('Please select a valid image file.');
+          setImagePreview(null);
+          return; 
         }
-      };
-      reader.readAsDataURL(file); 
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target?.result) {
+            setImagePreview(e.target.result as string);
+          }
+        };
+        reader.readAsDataURL(file); 
 
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('time', message); 
-      const start_time = performance.now()
-      try {
-        const response = await fetch('/api/image', {
-          method: 'POST',
-          body: formData,
-        });
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('time', message); 
+        const start_time = performance.now()
+        try {
+          const response = await fetch('/api/image', {
+            method: 'POST',
+            body: formData,
+          });
 
-        if (response.ok) {
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          setProcessedImage(url);
-        } else {
-          console.log('Image upload failed.');
+
+            if (response.ok){
+              if (response.headers.get("Content-Type")?.includes("image/png")) {
+                // If response is an image, convert it to a blob and display it
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setProcessedImage(imageUrl);
+            }
+            else{
+              const newreader = new FileReader();
+              newreader.onload = (e) => {
+                if (e.target?.result) {
+                  setProcessedImage(e.target.result as string);
+                }
+              };
+              newreader.readAsDataURL(file); 
+            }
+            }
+            else{
+              alert("Something wrong")
+            }
+            
+        
+        } catch (error) {
+          console.error('Error uploading file:', error);
         }
-      } catch (error) {
-        console.error('Error uploading file:', error);
+        const stop_time = performance.now()
+        setTime(((stop_time-start_time)/1000).toFixed(2).toString())
       }
-      const stop_time = performance.now()
-      setTime(((stop_time-start_time)/1000).toFixed(2).toString())
-    }
-  };
+    };
 
   const handleButtonClick = () => {
     const fileInput = document.getElementById('imageUpload') as HTMLInputElement;
@@ -63,19 +81,30 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ message }) => {
 
   return (
     <div className="mt-5">
-      <button
-        className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full"
-        onClick={handleButtonClick}
-      >
-        Insert Image...
-      </button>
-      <input
+<div className="inline-flex space-x-4">
+  <button
+    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full"
+    onClick={handleButtonClick}
+  >
+    Insert Image...
+  </button>
+    <button
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full"
+      onClick={()=>router.push('/dashboard')}
+    >
+      Dashboard
+    </button>
+
+    
+  </div>
+  <input
         type="file"
         id="imageUpload"
         accept="image/*"
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
+
       <h4 className="mt-5">Time to response: {time}</h4>
       <div className="mt-6 flex justify-center gap-6">
         <div className="flex flex-col items-center">

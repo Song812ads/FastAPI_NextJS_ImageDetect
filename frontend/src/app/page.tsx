@@ -35,6 +35,8 @@ const Home: React.FC = () => {
           src="/img/contact.png"
           alt="Logo"
           className="inline-block"
+          height={160}
+          width={160}
         />
         <p className="text-sm inline-block ml-2">
           <p>Name: Tran Ngoc Minh Song</p>

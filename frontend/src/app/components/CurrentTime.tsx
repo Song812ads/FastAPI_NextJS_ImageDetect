@@ -8,6 +8,7 @@ interface CurrentTimeProps {
 }
 
 const CurrentTime: React.FC<CurrentTimeProps> = ({ onDataChange }) => {
+
   const [currentTime, setCurrentTime] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,15 +21,15 @@ const CurrentTime: React.FC<CurrentTimeProps> = ({ onDataChange }) => {
 
     // Clean up the timer when the component unmounts
     return () => clearInterval(timer);
-  }, [currentTime, onDataChange]); // Include currentTime and onDataChange in the dependency array
+  }, [onDataChange, currentTime]); // Include currentTime and onDataChange in the dependency array
 
   return (
     <div className="mt-5">
-      <h2 suppressHydrationWarning>
+      <span suppressHydrationWarning>
         {!currentTime
           ? "Current Date and Time: Loading..."
           : "Current Date-Time: " + currentTime}
-      </h2>
+      </span>
     </div>
   );
 };
