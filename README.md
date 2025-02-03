@@ -28,24 +28,24 @@ I reused the pretrained model yolov8, and do some other process to optimize it f
 
 Access the webpage with localhost:
 
-![alt text](image.png)
+![alt text](img/image.png)
 
 Insert image and wait for response:
 
-![alt text](image-1.png)
+![alt text](img/image-1.png)
 
 Go to dashboard and check:
 
-![alt text](image-2.png)
+![alt text](img/image-2.png)
 
 The dashboard has the pagination tab, every page has maximum of 5 elements. 
 
 You can query the events you need on the search bar.
 With date and quantity, it queries all elements have  date or quantity equals to input. 
 
-![alt text](image-4.png)
+![alt text](img/image-4.png)
 
 
 With time query, if your input is just a number, it will be known as hour, and it will check from the hour:0:0 to hour:59:59, if your input's format is like 12:30, it will be known as hour:minute and it will check from hour:minute:00 to hour:minute:59
 
-![alt text](image-5.png)
+![alt text](img/image-5.png)
